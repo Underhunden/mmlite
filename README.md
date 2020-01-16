@@ -6,8 +6,11 @@ The extension works exactly as postgres' own logical replication pgoutput plugin
 Caveats apply!
 
 ## Install
-* make
-* make install
+Make sure pg_config is in your path.
+
+<code>PGXS=1 make</code>
+
+<code>PGXS=1 make install</code>
 
 ## Usage
 Node 1:
