@@ -34,7 +34,7 @@ Node 2:
 
 <code>CREATE SUBSCRIPTION from_node1 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node1 WITH (copy_data = true, create_slot = false, slot_name = 'node2');</code>
 
-Now node2 should be subscribed to node1, now let's subscribe to node2 from node1.
+Now node2 should be subscribed to node1, let's subscribe to node2 from node1.
 
 Node1:
 
