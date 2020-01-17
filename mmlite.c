@@ -1,11 +1,14 @@
 /*-------------------------------------------------------------------------
  *
  * mmlite.c
- *		Logical Replication output plugin for lightweight
- *      multimaster environments
+ *	Logical Replication output plugin for lightweight
+ *	multimaster environments
+ *
+ * Portions Copyright (c) 2020, Jesper St John
+ * Portions Copyright (c) 2012-2019, PostgreSQL Global Development Group
  *
  * IDENTIFICATION
- *		mmlite.c
+ *	mmlite.c
  *
  *-------------------------------------------------------------------------
  */
@@ -29,20 +32,21 @@ PG_MODULE_MAGIC;
 extern void _PG_output_plugin_init(OutputPluginCallbacks *cb);
 
 static void mmlite_startup(LogicalDecodingContext *ctx,
-							 OutputPluginOptions *opt, bool is_init);
+						   OutputPluginOptions *opt, bool is_init);
 static void mmlite_shutdown(LogicalDecodingContext *ctx);
 static void mmlite_begin_txn(LogicalDecodingContext *ctx,
-							   ReorderBufferTXN *txn);
+							 ReorderBufferTXN *txn);
 static void mmlite_commit_txn(LogicalDecodingContext *ctx,
-								ReorderBufferTXN *txn, XLogRecPtr commit_lsn);
+							  ReorderBufferTXN *txn, XLogRecPtr commit_lsn);
 static void mmlite_change(LogicalDecodingContext *ctx,
-							ReorderBufferTXN *txn, Relation rel,
-							ReorderBufferChange *change);
+						  ReorderBufferTXN *txn, Relation rel,
+						  ReorderBufferChange *change);
 static void mmlite_truncate(LogicalDecodingContext *ctx,
-							  ReorderBufferTXN *txn, int nrelations, Relation relations[],
-							  ReorderBufferChange *change);
+							ReorderBufferTXN *txn, int nrelations,
+							Relation relations[],
+							ReorderBufferChange *change);
 static bool mmlite_origin_filter(LogicalDecodingContext *ctx,
-								   RepOriginId origin_id);
+								 RepOriginId origin_id);
 
 static bool publications_valid;
 
@@ -63,7 +67,7 @@ typedef struct RelationSyncEntry
 static HTAB *RelationSyncCache = NULL;
 
 static void init_rel_sync_cache(MemoryContext decoding_context);
-static RelationSyncEntry *get_rel_sync_entry(MMLiteData *data, Oid relid);
+static RelationSyncEntry *get_rel_sync_entry(MMLiteData * data, Oid relid);
 static void rel_sync_cache_relation_cb(Datum arg, Oid relid);
 static void rel_sync_cache_publication_cb(Datum arg, int cacheid,
 										  uint32 hashvalue);
@@ -147,7 +151,7 @@ parse_output_parameters(List *options, uint32 *protocol_version,
  */
 static void
 mmlite_startup(LogicalDecodingContext *ctx, OutputPluginOptions *opt,
-				 bool is_init)
+			   bool is_init)
 {
 	MMLiteData *data = palloc0(sizeof(MMLiteData));
 
@@ -246,7 +250,7 @@ mmlite_begin_txn(LogicalDecodingContext *ctx, ReorderBufferTXN *txn)
  */
 static void
 mmlite_commit_txn(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
-					XLogRecPtr commit_lsn)
+				  XLogRecPtr commit_lsn)
 {
 	OutputPluginUpdateProgress(ctx);
 
@@ -304,7 +308,7 @@ maybe_send_schema(LogicalDecodingContext *ctx,
  */
 static void
 mmlite_change(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
-				Relation relation, ReorderBufferChange *change)
+			  Relation relation, ReorderBufferChange *change)
 {
 	MMLiteData *data = (MMLiteData *) ctx->output_plugin_private;
 	MemoryContext old;
@@ -380,7 +384,7 @@ mmlite_change(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
 
 static void
 mmlite_truncate(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
-				  int nrelations, Relation relations[], ReorderBufferChange *change)
+				int nrelations, Relation relations[], ReorderBufferChange *change)
 {
 	MMLiteData *data = (MMLiteData *) ctx->output_plugin_private;
 	MemoryContext old;
@@ -431,7 +435,7 @@ mmlite_truncate(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
  */
 static bool
 mmlite_origin_filter(LogicalDecodingContext *ctx,
-					   RepOriginId origin_id)
+					 RepOriginId origin_id)
 {
 	if (origin_id != InvalidRepOriginId)
 	{
@@ -533,7 +537,7 @@ init_rel_sync_cache(MemoryContext cachectx)
  * Find or create entry in the relation schema cache.
  */
 static RelationSyncEntry *
-get_rel_sync_entry(MMLiteData *data, Oid relid)
+get_rel_sync_entry(MMLiteData * data, Oid relid)
 {
 	RelationSyncEntry *entry;
 	bool		found;
