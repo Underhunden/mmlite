@@ -20,13 +20,13 @@ Make sure pg_config is in your path.
 
 Set <code>wal_level = 'logical'</code> in postgresql.conf and restart.
 
-Node 1:
+### Node 1:
 
 <code>CREATE PUBLICATION node1 FOR TABLE users, departments;</code>
 
 <code>SELECT pg_create_logical_replication_slot('node2', 'mmlite');</code>
 
-Node 2:
+### Node 2:
 
 <code>CREATE PUBLICATION node2 FOR TABLE users, departments;</code>
 
@@ -36,7 +36,7 @@ Node 2:
 
 Now node2 should be subscribed to node1, let's subscribe to node2 from node1.
 
-Node1:
+### Node1:
 
 <code>CREATE SUBSCRIPTION from_node2 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node2 WITH (copy_data = false, create_slot = false, slot_name = 'node1');</code>
 
