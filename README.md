@@ -24,7 +24,7 @@ Set `wal_level = 'logical'` in postgresql.conf and restart.
 
 ### Node 1:
 
-    CREATE PUBLICATION node1 FOR TABLE users, departments;</code
+    CREATE PUBLICATION node1 FOR TABLE users, departments;
     SELECT pg_create_logical_replication_slot('node2', 'mmlite');
 
 ### Node 2:
