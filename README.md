@@ -8,37 +8,34 @@ Only tested with PostgreSQL 12.
 Caveats apply!
 
 ## Install
-<code>git clone https://github.com/Underhunden/mmlite.git</code>
+    git clone https://github.com/Underhunden/mmlite.git
 
 Make sure pg_config is in your path.
 
-<code>PGXS=1 make</code>
-
-<code>PGXS=1 make install</code>
+    PGXS=1 make
+    PGXS=1 make install
 
 ## Usage
 
-Set <code>wal_level = 'logical'</code> in postgresql.conf and restart.
+Set `wal_level = 'logical'` in postgresql.conf and restart.
 
 ### Node 1:
 
-<code>CREATE PUBLICATION node1 FOR TABLE users, departments;</code>
-
-<code>SELECT pg_create_logical_replication_slot('node2', 'mmlite');</code>
+    CREATE PUBLICATION node1 FOR TABLE users, departments;</code
+    SELECT pg_create_logical_replication_slot('node2', 'mmlite');
 
 ### Node 2:
 
-<code>CREATE PUBLICATION node2 FOR TABLE users, departments;</code>
+    CREATE PUBLICATION node2 FOR TABLE users, departments;
+    SELECT pg_create_logical_replication_slot('node1', 'mmlite');
 
-<code>SELECT pg_create_logical_replication_slot('node1', 'mmlite');</code>
-
-<code>CREATE SUBSCRIPTION from_node1 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node1 WITH (copy_data = true, create_slot = false, slot_name = 'node2');</code>
+    CREATE SUBSCRIPTION from_node1 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node1 WITH (copy_data = true, create_slot = false, slot_name = 'node2');
 
 Now node2 should be subscribed to node1, let's subscribe to node2 from node1.
 
 ### Node1:
 
-<code>CREATE SUBSCRIPTION from_node2 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node2 WITH (copy_data = false, create_slot = false, slot_name = 'node1');</code>
+    CREATE SUBSCRIPTION from_node2 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node2 WITH (copy_data = false, create_slot = false, slot_name = 'node1');
 
 Now both nodes should be subscribed to each other and will be getting updates. Add more nodes by subscribing to all existing, and let existing subscribe to the newly added one.
 
