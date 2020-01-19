@@ -1,5 +1,5 @@
 # mmlite
-A Multi Master (Lite) extension for PostgreSQL
+A Multi Master (Lite) extension for PostgreSQL.
 
 The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. That means nodes can publish/subscribe to each other without bouncing messages back and forth, giving us a lightweight multi master setup.
 
