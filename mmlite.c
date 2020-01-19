@@ -4,9 +4,6 @@
  *	Logical Replication output plugin for lightweight
  *	multimaster environments
  *
- * Portions Copyright (c) 2020, Jesper St John
- * Portions Copyright (c) 2012-2019, PostgreSQL Global Development Group
- *
  * IDENTIFICATION
  *	mmlite.c
  *
