@@ -1,7 +1,7 @@
 # mmlite
 A Multi Master (Lite) extension for PostgreSQL
 
-The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. That means nodes can publish/subscribe to each other without bouncing messages back and forth, giving us a multi master (lite) setup.
+The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. That means nodes can publish/subscribe to each other without bouncing messages back and forth, giving us a lightweight multi master setup.
 
 Only tested with PostgreSQL 12.
 
@@ -40,6 +40,11 @@ Now node2 should be subscribed to node1, let's subscribe to node2 from node1.
 Now both nodes should be subscribed to each other and will be getting updates. Add more nodes by subscribing to all existing, and let existing subscribe to the newly added one.
 
 ## Caveats
-* serials - use uuid/other random PK.
-* copy_data = true in subscription setup - won't give you an origin, do it before subscribing.
-* uniques - treat one of your nodes as a logical master node.
+### Conflicts
+* No handling of conflicts included. You are responsible for designing a conflict free application.
+  * Primary key serials might cause conflicts - use UUID or other random PK.
+  * Use a "logical" master (can be any of the nodes, but decide on one) within your application for values such as:
+    * Unique emails in a users table.
+    * Important stuff like transactions to/from balance tables.
+### Other
+* If `copy_data = true` is set when setting up a new subscription, it won't set an origin for the data to be transmitted. Make sure **no** other nodes are subscribed to a **new** node before all data gets replicated. 
