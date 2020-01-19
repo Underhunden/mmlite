@@ -3,7 +3,7 @@ A Multi Master (Lite) extension for PostgreSQL
 
 The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. That means nodes can publish/subscribe to each other without bouncing messages back and forth, giving us a lightweight multi master setup.
 
-Only tested with PostgreSQL 12.
+Only works with PostgreSQL 12.
 
 Caveats apply!
 
@@ -16,6 +16,9 @@ Make sure pg_config is in your path.
     PGXS=1 make install
 
 ## Usage
+
+Make sure you know how logical replication works before you start.
+https://www.postgresql.org/docs/12/logical-replication.html
 
 Set `wal_level = 'logical'` in postgresql.conf and restart.
 
@@ -45,6 +48,13 @@ Now both nodes should be subscribed to each other and will be getting updates. A
   * Primary key serials might cause conflicts - use UUID or other random PK.
   * Use a "logical" master (can be any of the nodes, but decide on one) within your application for values such as:
     * Unique emails in a users table.
-    * Important stuff like transactions to/from balance tables.
+    * Transactions to/from balance tables.
+    * Everything that needs to happen only once.
 ### Other
-* If `copy_data = true` is set when setting up a new subscription, it won't set an origin for the data to be transmitted. Make sure **no** other nodes are subscribed to a **new** node before all data gets replicated. 
+* If `copy_data = true` is set when setting up a new subscription, it won't set an origin for the data to be transmitted. Make sure **no** other nodes are subscribed to a **new** node before all the data gets replicated. 
+
+## TODO
+* Support for older pg versions.
+
+## Questions/Suggestions
+Please let me know, open a ticket or create a PR.
