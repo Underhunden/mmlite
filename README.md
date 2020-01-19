@@ -17,10 +17,8 @@ Make sure pg_config is in your path.
 
 ## Usage
 
-Make sure you know how logical replication works before you start.
-
+Make sure you know how logical replication works before you start.\
 https://www.postgresql.org/docs/12/logical-replication.html
-
 
 Set `wal_level = 'logical'` in postgresql.conf and restart.
 
