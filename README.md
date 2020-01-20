@@ -1,7 +1,7 @@
 # mmlite
-A Multi Master (Lite) extension for PostgreSQL.
+A lightweight multi master extension for PostgreSQL.
 
-The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. That means nodes can publish/subscribe to each other without bouncing messages back and forth, giving us a lightweight multi master setup.
+The extension works exactly as postgres' own logical replication pgoutput plugin (it's basically copied) with one (1) major difference/addition. It filters out all output that's got a valid origin. This means you can publish/subscribe to tables existing in all nodes without bouncing messages back and forth, giving us a lightweight multi master setup.
 
 Only tested with PostgreSQL 12.
 
@@ -51,10 +51,13 @@ Now both nodes should be subscribed to each other and will be getting updates. A
     * Transactions to/from balance tables.
     * Everything that needs to happen only once.
 ### Other
-* If `copy_data = true` is set when setting up a new subscription, it won't set an origin for the data to be transmitted. Make sure **no** other nodes are subscribed to a **new** node before all the data gets replicated. 
+* If `copy_data = true` is set when setting up a new subscription, it won't set an origin for the data to be transmitted. Make sure **no** other nodes are subscribed to a **new** node before all the data gets replicated.
+### All restrictions with logical replication also applies to this extension
+* Read more here: https://www.postgresql.org/docs/12/logical-replication-restrictions.html
 
 ## TODO
 * Support for older pg versions.
+* Setup REGRESS tests.
 * Fix LICENSE?
 
 ## Questions/Suggestions
