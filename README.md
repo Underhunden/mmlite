@@ -10,7 +10,7 @@ Caveats apply!
 ## Install
     git clone https://github.com/Underhunden/mmlite.git
 
-Make sure pg_config is in your path.
+Make sure pg_config is in your path and you have development tools installed.
 
     PGXS=1 make
     PGXS=1 make install
@@ -20,12 +20,20 @@ Make sure pg_config is in your path.
 Make sure you know how logical replication works before you start.\
 https://www.postgresql.org/docs/12/logical-replication.html
 
-Set `wal_level = 'logical'` in postgresql.conf and restart.
+Set `wal_level = logical` in postgresql.conf and restart.
 
 ### Node 1:
 
     CREATE PUBLICATION node1 FOR TABLE users, departments;
     SELECT pg_create_logical_replication_slot('node2', 'mmlite');
+
+Make sure your replication slot use the new mmlite extension.
+
+    SELECT slot_name, plugin FROM pg_replication_slots;
+
+    slot_name | plugin
+    -----------+--------
+    node2     | mmlite
 
 ### Node 2:
 
