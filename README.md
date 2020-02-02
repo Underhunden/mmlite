@@ -44,11 +44,30 @@ Make sure your replication slot use the new mmlite extension.
 
 Now node2 should be subscribed to node1, let's subscribe to node2 from node1.
 
-### Node1:
+### Node 1:
 
     CREATE SUBSCRIPTION from_node2 CONNECTION 'dbname=?? host=?? user=??' PUBLICATION node2 WITH (copy_data = false, create_slot = false, slot_name = 'node1');
 
-Now both nodes should be subscribed to each other and will be getting updates. Add more nodes by subscribing to all existing, and let existing subscribe to the newly added one.
+Now both nodes should be subscribed to each other and will be getting updates.
+
+### Node 3:
+
+This module do support having many to many subscriptions, however care must be taken when adding new nodes. The easiest way to add a node without losing transactions is to shut down or put your application in read-only mode, that way no new transactions will being created during the creation of a new node. If shutting down your application is not possible, you're up for something more complicated.
+
+These are the steps:
+* Decide on one node to be used as source for the initial data copy, in this case we choose Node 1.
+* As quickly/synced as possible, run the creation of slots (Node 1 and 2) and the `CREATE SUBSCRIPTION` command on Node 3.
+  * Start with Node 2, then Node 1 and last the `CREATE SUBSCRIPTION` on Node 3.
+* Every transaction that happened on Node 2 between creation of a new slot on Node 2 and Node 1 will later possibly become a conflict on the new node.
+* You will have to look at the log on Node 3 after subscribing to Node 2.
+  * If conflicts arise, those have to be solved.
+    * Change the data to that those duplicated transactions can be replayed from Node 2.
+    * Skip those transactions. The manual suggests this: https://www.postgresql.org/docs/12/logical-replication-conflicts.html
+	  * A function is on the TODO list to skip transactions step by step.
+* When all data is copied and Node 3 is subscribing to Node 1 and 2, it's time for Node 1 and 2 to subscribe to Node 3.
+
+Note: If more than 3 nodes is needed, these steps will include handling conflicts from several sources.
+
 
 ## Caveats
 ### Conflicts
@@ -67,6 +86,7 @@ Now both nodes should be subscribed to each other and will be getting updates. A
 * Support for older pg versions.
 * Setup REGRESS tests.
 * Fix LICENSE?
+* Create a function for skipping transactions step-by-step.
 
 ## Questions/Suggestions
 Please let me know, open a ticket or create a PR.
