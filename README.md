@@ -19,7 +19,9 @@ Make sure pg_config is in your path and you have development tools installed.
 ## Usage
 
 Make sure you know how logical replication works before you start.\
+https://www.postgresql.org/docs/11/logical-replication.html
 https://www.postgresql.org/docs/12/logical-replication.html
+https://www.postgresql.org/docs/13/logical-replication.html
 
 Set `wal_level = logical` in postgresql.conf and restart.
 
@@ -63,7 +65,10 @@ Here's one way of doing it:
 * You will have to look at the log on Node 3 after subscribing to Node 2.
   * If conflicts arise, those have to be solved.
     * Change the data to that those duplicated transactions can be replayed from Node 2.
-    * Skip those transactions. The manual suggests this: https://www.postgresql.org/docs/12/logical-replication-conflicts.html
+    * Skip those transactions. The manual suggests this:
+	  * https://www.postgresql.org/docs/11/logical-replication-conflicts.html
+	  * https://www.postgresql.org/docs/12/logical-replication-conflicts.html
+	  * https://www.postgresql.org/docs/13/logical-replication-conflicts.html
 	  * A function is on the TODO list to skip transactions step by step.
 * When all data is copied and Node 3 is subscribing to Node 1 and 2, it's time for Node 1 and 2 to subscribe to Node 3.
 
