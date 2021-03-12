@@ -370,6 +370,7 @@ mmlite_change(LogicalDecodingContext *ctx, ReorderBufferTXN *txn,
 			}
 			else
 				elog(DEBUG1, "didn't send DELETE change because of missing oldtuple");
+			break;
 		default:
 			Assert(false);
 	}
