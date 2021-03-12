@@ -535,7 +535,7 @@ init_rel_sync_cache(MemoryContext cachectx)
  * Find or create entry in the relation schema cache.
  */
 static RelationSyncEntry *
-get_rel_sync_entry(MMLiteData * data, Oid relid)
+get_rel_sync_entry(MMLiteData *data, Oid relid)
 {
 	RelationSyncEntry *entry;
 	bool		found;

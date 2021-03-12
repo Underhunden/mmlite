@@ -24,6 +24,6 @@ typedef struct MMLiteData
 
 	List	   *publication_names;
 	List	   *publications;
-}			MMLiteData;
+} MMLiteData;
 
 #endif							/* MMLITE_H */
