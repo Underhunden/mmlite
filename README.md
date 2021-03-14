@@ -89,6 +89,7 @@ Here's another way of doing it:
 * Open up the traffic for Node 2 and Node 3.
 
 Note 1: The node(s) that are still in production during the pg_hba/iptables/network block will be accumulating WAL - have enough free disk!
+
 Note 2: These steps can be repeated for more nodes - just think about Note 1.
 
 ## Caveats
