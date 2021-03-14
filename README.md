@@ -18,7 +18,7 @@ Make sure pg_config is in your path and you have development tools installed.
 
 ## Usage
 
-Make sure you know how logical replication works before you start.\
+Make sure you know how logical replication works before you start.
 https://www.postgresql.org/docs/11/logical-replication.html
 https://www.postgresql.org/docs/12/logical-replication.html
 https://www.postgresql.org/docs/13/logical-replication.html
